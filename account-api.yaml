@@ -1,0 +1,79 @@
+# openapi-definition.yaml
+swagger: "2.0"
+info:
+  title: account-api
+  description: API for accessing accounts
+  version: 1.0.0
+schemes:
+ - https
+produces:
+ - application/json
+securityDefinitions:
+ api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
+ bearer:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: ""
+    x-google-jwks_uri: ""
+    x-google-jwt-locations:
+      - header: "Authorization"
+        value_prefix: "Bearer " 
+paths:
+  /account/{account_id}:
+      get:
+        summary: Get an Account
+        operationId: getAccount
+        x-google-backend:
+          address: https://us-central1-spanner-demo-.cloudfunctions.net/account
+          protocol: h2
+        security:
+          - api_key: []
+        parameters:
+          - name: account_id
+            in: path
+            description: Account Id
+            required: true
+            type: string
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+  /account:
+      post:
+        summary: Add Account using Cloud Run Service
+        operationId: add_update_account
+        x-google-backend:
+          address: https://account--uc.a.run.app
+          # path_translation: APPEND_PATH_TO_ADDRESS
+        security:
+          - bearer: []
+        parameters:
+          - name: account
+            in: body
+            description: Account to be Added
+            schema:
+              $ref: '#/definitions/Account'
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+definitions:
+  Account:
+    type: object
+    required:
+     - id
+     - firstname
+     - lastname
+    properties:
+      id:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string

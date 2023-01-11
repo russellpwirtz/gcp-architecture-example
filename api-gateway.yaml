@@ -1,0 +1,109 @@
+# openapi-definition.yaml
+swagger: "2.0"
+info:
+  title: api-gateway
+  description: API Gateway
+  version: 1.0.0
+schemes:
+ - https
+produces:
+ - application/json
+securityDefinitions:
+ api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
+paths:
+  /adjustments:
+    post:
+      summary: Post an adjustment
+      operationId: postAdjustment
+      x-google-backend:
+        address: https://us-west2-spanner-demo-369019.cloudfunctions.net/adjustments_gateway
+        protocol: h2
+      security:
+        - api_key: []
+      parameters:
+        - name: adjustment
+          in: body
+          description: Adjustment to be Added
+          schema:
+            $ref: '#/definitions/Adjustment'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+  /accounts/{account_id}:
+      get:
+        summary: Get an Account
+        operationId: getAccount
+        x-google-backend:
+          address:  https://us-west2-spanner-demo-369019.cloudfunctions.net/get_account
+          protocol: h2
+        security:
+          - api_key: []
+        parameters:
+          - name: account_id
+            in: path
+            description: Account Id
+            required: true
+            type: string
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+  /accounts:
+      post:
+        summary: Add Account 
+        operationId: addUpdateAccount
+        x-google-backend:
+          address: https://us-west2-spanner-demo-369019.cloudfunctions.net/add_update_account
+          protocol: h2
+        security:
+          - api_key: []
+        parameters:
+          - name: account
+            in: body
+            description: Account to be Added
+            schema:
+              $ref: '#/definitions/Account'
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+definitions:
+  Account:
+    type: object
+    required:
+     - id
+     - firstname
+     - lastname
+    properties:
+      id:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+  Adjustment:
+    type: object
+    required:
+     - account_id
+     - timestamp
+     - amount
+     - asset
+     - description
+    properties:
+      account_id:
+        type: string
+      timestamp:
+        type: string
+      amount:
+        type: string
+      asset:
+        type: string
+      description:
+        type: string

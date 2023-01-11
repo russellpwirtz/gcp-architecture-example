@@ -1,0 +1,37 @@
+# [START adjustments-workflow]
+main:
+  params: [input]
+  steps:
+    - init_variables:
+        assign:
+          - region: "us-west2"
+          - project: "spanner-demo-369019"
+          - topic: "events"
+    - print_input:
+        call: sys.log
+        args:
+         - text: '${"account_id: " + input.account_id}'
+    - post_adjustments_function:
+        call: http.post
+        args:
+          url: ${"https://" + region + "-" + project + ".cloudfunctions.net/post_adjustment"}
+          auth:
+            type: OIDC
+          body:
+            account_id: ${input.account_id}
+            timestamp: ${input.timestamp}
+            amount: ${input.amount}
+            asset: ${input.asset}
+            description: ${input.description}
+        result: adjustments_response
+    # - publish:
+    #     call: googleapis.pubsub.v1.projects.topics.publish
+    #     args:
+    #       topic: ${"projects/" + project + "/topics/" + topic}
+    #       body:
+    #         messages:
+    #           - data: ${base64.encode(text.encode(adjustments_response.body))}
+    #     result: publish_result
+    - return_value:
+        return: ${adjustments_response.body}
+# [END adjustments-workflow]

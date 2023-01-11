@@ -5,7 +5,7 @@ main:
     - init_variables:
         assign:
           - region: "us-west2"
-          - project: "spanner-demo-369019"
+          - project: "spanner-demo-1"
           - topic: "events"
     - print_input:
         call: sys.log

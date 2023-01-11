@@ -5,8 +5,8 @@ from google.cloud import workflows_v1beta
 from google.cloud.workflows import executions_v1beta
 from google.cloud.workflows.executions_v1beta.types import executions
 
-def adjustments_gateway(request) -> Response:
-    project = 'spanner-demo-369019'
+def api_gateway(request) -> Response:
+    project = 'spanner-demo-1'
     location = 'us-west2'
     workflow = 'adjustmentsWorkflow'
     return execute_workflow(request, project, location, workflow)

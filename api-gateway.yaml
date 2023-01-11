@@ -19,7 +19,7 @@ paths:
       summary: Post an adjustment
       operationId: postAdjustment
       x-google-backend:
-        address: https://us-west2-spanner-demo-369019.cloudfunctions.net/adjustments_gateway
+        address: https://us-west2-spanner-demo-.cloudfunctions.net/api_gateway
         protocol: h2
       security:
         - api_key: []

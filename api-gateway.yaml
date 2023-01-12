@@ -61,7 +61,7 @@ paths:
         summary: Add Account 
         operationId: addUpdateAccount
         x-google-backend:
-          address: https://us-west2-GCP_PROJECT.cloudfunctions.net/add_update_account
+          address: https://GCP_REGION-GCP_PROJECT.cloudfunctions.net/add_update_account
           protocol: h2
         security:
           - api_key: []

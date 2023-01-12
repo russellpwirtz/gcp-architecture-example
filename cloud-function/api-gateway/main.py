@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-# see .env file
+# needs .env file
 GCP_PROJECT: str = os.getenv("GCP_PROJECT")
 GCP_REGION: str = os.getenv("GCP_REGION")
 

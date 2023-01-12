@@ -19,7 +19,7 @@ paths:
       summary: Post an adjustment
       operationId: postAdjustment
       x-google-backend:
-        address: https://us-west2-spanner-demo-369019.cloudfunctions.net/api_gateway
+        address: https://GCP_REGION-GCP_PROJECT.cloudfunctions.net/api_gateway
         protocol: h2
       security:
         - api_key: []
@@ -41,7 +41,7 @@ paths:
         summary: Get an Account
         operationId: getAccount
         x-google-backend:
-          address:  https://us-west2-spanner-demo-369019.cloudfunctions.net/get_account
+          address:  https://GCP_REGION-GCP_PROJECT.cloudfunctions.net/get_account
           protocol: h2
         security:
           - api_key: []
@@ -61,7 +61,7 @@ paths:
         summary: Add Account 
         operationId: addUpdateAccount
         x-google-backend:
-          address: https://us-west2-spanner-demo-369019.cloudfunctions.net/add_update_account
+          address: https://us-west2-GCP_PROJECT.cloudfunctions.net/add_update_account
           protocol: h2
         security:
           - api_key: []

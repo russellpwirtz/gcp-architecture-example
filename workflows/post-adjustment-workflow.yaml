@@ -1,12 +1,12 @@
-# [START adjustments-workflow]
+# [START post-adjustment-workflow]
 main:
   params: [input]
   steps:
     - init_variables:
         assign:
-          - region: "us-west2"
-          - project: "spanner-demo-1"
-          - topic: "events"
+          - project:  ${input.gcp_project}
+          - region: ${input.gcp_region}
+          # - topic: "events"
     - print_input:
         call: sys.log
         args:
@@ -34,4 +34,4 @@ main:
     #     result: publish_result
     - return_value:
         return: ${adjustments_response.body}
-# [END adjustments-workflow]
+# [END post-adjustment-workflow]

@@ -3,13 +3,16 @@ import json
 from google.cloud import workflows_v1beta
 from google.cloud.workflows import executions_v1beta
 from google.cloud.workflows.executions_v1beta.types import executions
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
+# see .env file
+GCP_PROJECT: str = os.getenv("GCP_PROJECT")
+GCP_REGION: str = os.getenv("GCP_REGION")
 
 IP_ADDRESS_HEADER: str = 'X-Forwarded-For'
 ORIGINAL_PATH_HEADER: str = 'X-Envoy-Original-Path'
-
-# TODO: import via config
-GCP_PROJECT: str = 'spanner-demo-369019'
-GCP_REGION: str = 'us-west2'
 
 def api_gateway(request) -> Response:
     ip_address = request.headers.get(IP_ADDRESS_HEADER)
@@ -17,7 +20,8 @@ def api_gateway(request) -> Response:
     print(f"API request from IP: {ip_address} for path: {api_path}")
 
     if ("/adjustments" == api_path):
-        workflow = 'adjustmentsWorkflow'
+        # TODO: check if request.method is POST
+        workflow = 'postAdjustmentWorkflow'
     else:
         raise Exception(f"Unknown API path: {api_path}")
 
@@ -32,9 +36,13 @@ def execute_workflow(request, project, location, workflow) -> Response:
 
     parent = workflows_client.workflow_path(project, location, workflow)
 
+    workflow_params = request.get_json()
+    workflow_params['gcp_project'] = project
+    workflow_params['gcp_region'] = location
+
     response = execution_client.create_execution(
         parent=parent, 
-        execution=executions.Execution(argument=json.dumps(request.get_json())))
+        execution=executions.Execution(argument=json.dumps(workflow_params)))
     
     execution_id = response.name.split("/executions/")[1]
     

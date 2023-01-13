@@ -17,3 +17,72 @@ The main components of the architecture are:
 To deploy and run the example, you will need to have a GCP account and have the GCP CLI installed on your machine. 
 
 ![GCP OLTP with orchestration (2)](https://user-images.githubusercontent.com/987237/211893022-d225ff48-b3f2-48c1-ae66-137dd2087576.png)
+
+
+# Project Setup
+
+- Create project in GCP Console
+
+- Confirm billing is enabled for project
+
+
+- Ensure project is selected in console and note project ID
+
+- Download Google Cloud CLI
+https://cloud.google.com/sdk/docs/install-sdk
+
+
+- Set local environment (fill in your specific details)
+> export PROJECT_ID=myproject-12345\
+> export REGION=us-west2
+
+
+- Initialize project
+
+> gcloud init
+
+- Ensure the project is set to default:
+
+> gcloud config set project $PROJECT_ID
+
+- Replace all instances of MY_GCP_PROJECT with your project info
+
+> grep -rl MY_GCP_PROJECT . | xargs sed -i -e 's/MY_GCP_PROJECT/'"$PROJECT_ID"'/g'
+
+> grep -rl MY_GCP_REGION . | xargs sed -i -e 's/MY_GCP_REGION/'"$REGION"'/g'
+
+
+
+- Create Service Account
+> gcloud iam service-accounts create service-account-01 \ \
+    --description="Service account for API Gateway" \ \
+    --display-name="service-account-01"
+
+- List service accounts and note email:
+> gcloud iam service-accounts list
+
+- Set local environment service account (fill in your specific details)
+> export SERVICE_ACCOUNT_EMAIL=service-account-01@myproject-12345.iam.gserviceaccount.com
+
+- Check API Gateway and enable if needed:
+> gcloud api-gateway api-configs list
+
+- Create new API Gateway configuration
+> gcloud api-gateway api-configs create api-gateway-v01 \ \
+  --api=api-gateway --openapi-spec=api-gateway.yaml \ \
+  --project=$PROJECT_ID \ \
+  --backend-auth-service-account=$SERVICE_ACCOUNT_EMAIL
+
+-  Listing the api configs should show the newly created config:
+> gcloud api-gateway api-configs list 
+
+
+
+## Notes
+
+> gcloud basic commands:
+>  - gcloud auth list
+>  - gcloud config list
+>  - gcloud info
+>  - gcloud help
+>    (i.e. gcloud help compute instances create)

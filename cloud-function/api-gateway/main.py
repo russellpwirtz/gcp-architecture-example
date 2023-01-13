@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-# needs .env file
+# requires .env file
 GCP_PROJECT: str = os.getenv("GCP_PROJECT")
 GCP_REGION: str = os.getenv("GCP_REGION")
 
@@ -25,20 +25,20 @@ def api_gateway(request) -> Response:
     else:
         raise Exception(f"Unknown API path: {api_path}")
 
-    return execute_workflow(request, GCP_PROJECT, GCP_REGION, workflow)
+    return execute_workflow(request, workflow)
 
-def execute_workflow(request, project, location, workflow) -> Response:
-    if not project:
+def execute_workflow(request, workflow) -> Response:
+    if not GCP_PROJECT:
         raise Exception('project is required.')
 
     execution_client = executions_v1beta.ExecutionsClient()
     workflows_client = workflows_v1beta.WorkflowsClient()
 
-    parent = workflows_client.workflow_path(project, location, workflow)
+    parent = workflows_client.workflow_path(GCP_PROJECT, GCP_REGION, workflow)
 
     workflow_params = request.get_json()
-    workflow_params['gcp_project'] = project
-    workflow_params['gcp_region'] = location
+    workflow_params['gcp_project'] = GCP_PROJECT
+    workflow_params['gcp_region'] = GCP_REGION
 
     response = execution_client.create_execution(
         parent=parent, 

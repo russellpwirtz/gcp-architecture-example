@@ -14,44 +14,42 @@ The main components of the architecture are:
 
 - Cloud Pub/Sub: This is a fully managed messaging service that allows for the sending and receiving of messages between independent applications. It can be used to trigger functions in response to incoming events.
 
-To deploy and run the example, you will need to have a GCP account and have the GCP CLI installed on your machine. 
 
 ![GCP OLTP with orchestration (2)](https://user-images.githubusercontent.com/987237/211893022-d225ff48-b3f2-48c1-ae66-137dd2087576.png)
 
+<br><br>
 
-# Project Setup
+# Deploying the services
 
-- Create project in GCP Console
+## GCP Console setup
+- Create project in GCP Console: https://console.cloud.google.com/
 
 - Confirm billing is enabled for project
 
 
 - Ensure project is selected in console and note project ID
 
+## Local environment setup
 - Download Google Cloud CLI
 https://cloud.google.com/sdk/docs/install-sdk
 
 
-- Set local environment (fill in your specific details)
+- In shell, set local environment variables (fill in your specific details)
 > export PROJECT_ID=myproject-12345\
 > export REGION=us-west2
 
-
 - Initialize project
-
 > gcloud init
 
 - Ensure the project is set to default:
-
 > gcloud config set project $PROJECT_ID
 
-- Replace all instances of MY_GCP_PROJECT with your project info
-
+- Run bash commands at project root to update config (make sure PROJECT_ID and REGION vars are set):
 > grep -rl MY_GCP_PROJECT . | xargs sed -i -e 's/MY_GCP_PROJECT/'"$PROJECT_ID"'/g'
 
 > grep -rl MY_GCP_REGION . | xargs sed -i -e 's/MY_GCP_REGION/'"$REGION"'/g'
 
-
+## Service Account setup
 
 - Create Service Account
 > gcloud iam service-accounts create service-account-01 \ \
@@ -64,10 +62,12 @@ https://cloud.google.com/sdk/docs/install-sdk
 - Set local environment service account (fill in your specific details)
 > export SERVICE_ACCOUNT_EMAIL=service-account-01@myproject-12345.iam.gserviceaccount.com
 
-- Check API Gateway and enable if needed:
+## API Gateway setup
+
+- Check API Gateway configs and enable if needed:
 > gcloud api-gateway api-configs list
 
-- Create new API Gateway configuration
+- Create new API Gateway configuration:
 > gcloud api-gateway api-configs create api-gateway-v01 \ \
   --api=api-gateway --openapi-spec=api-gateway.yaml \ \
   --project=$PROJECT_ID \ \
@@ -76,8 +76,50 @@ https://cloud.google.com/sdk/docs/install-sdk
 -  Listing the api configs should show the newly created config:
 > gcloud api-gateway api-configs list 
 
+- Create API Gateway:
+> gcloud api-gateway gateways create my-api-gateway \ \
+  --api=api-gateway --api-config=api-gateway-v01 \ \
+  --location=$REGION \ \
+  --project=$PROJECT_ID 
+
+- Verify API Gateway has been created:
+> gcloud api-gateway gateways list
+
+- To update API Gateway after new config gets deployed:
+> gcloud api-gateway gateways update my-api-gateway \ \
+--api=api-gateway --api-config=api-gateway-v02 \ \
+--location=$REGION
+
+## Cloud Functions setup
+
+- Deploy function for routing API calls to workflows (enable cloudfunctions and cloudbuild if prompted):
+<br>
+`Note: "unauthenticated invocations of new function" is currently required but this should be addressed`
+> gcloud functions deploy api_gateway --trigger-http \ \
+  --runtime python39 --source cloud-function/api-gateway \ \
+  --entry-point api_gateway \ \
+  --region $REGION
+
+- Deploy function for posting adjustments:
+> gcloud functions deploy post_adjustment --trigger-http \ \
+  --runtime python39 --source cloud-function/data \ \
+  --entry-point post_adjustment \ \
+  --region $REGION
+
+## Workflows setup
+
+- Deploy "Post Adjustment" workflow (enable `workflows.googleapis.com` if prompted)
+> gcloud workflows deploy postAdjustmentWorkflow \ \
+  --source workflows/post-adjustment-workflow.yaml \ \
+  --location=$REGION
 
 
+## Test it out
+
+- Get the API Gateway url:
+gcloud api-gateway gateways describe my-api-gateway --location $REGION | grep defaultHostname
+
+<br><br>
 ## Notes
 
 > gcloud basic commands:

@@ -49,6 +49,11 @@ https://cloud.google.com/sdk/docs/install-sdk
 
 > grep -rl MY_GCP_REGION . | xargs sed -i -e 's/MY_GCP_REGION/'"$REGION"'/g'
 
+- Enable GCP services
+> gcloud services enable apigateway.googleapis.com \
+gcloud services enable servicemanagement.googleapis.com \
+gcloud services enable servicecontrol.googleapis.com
+
 ## Service Account setup
 
 - Create Service Account
@@ -67,7 +72,7 @@ https://cloud.google.com/sdk/docs/install-sdk
 - Check API Gateway configs and enable if needed:
 > gcloud api-gateway api-configs list
 
-- Create new API Gateway configuration:
+- Create new API and API Gateway configuration:
 > gcloud api-gateway api-configs create api-gateway-v01 \ \
   --api=api-gateway --openapi-spec=api-gateway.yaml \ \
   --project=$PROJECT_ID \ \
@@ -75,6 +80,12 @@ https://cloud.google.com/sdk/docs/install-sdk
 
 -  Listing the api configs should show the newly created config:
 > gcloud api-gateway api-configs list 
+
+- Get the managed service name:
+> gcloud api-gateway apis list | awk '{print $3}'
+
+- Enable API service (use your managed service name):
+> gcloud services enable api-gateway-1234568k9easd.apigateway.gcp-test-01-123456.cloud.goog
 
 - Create API Gateway:
 > gcloud api-gateway gateways create my-api-gateway \ \
@@ -117,7 +128,29 @@ https://cloud.google.com/sdk/docs/install-sdk
 ## Test it out
 
 - Get the API Gateway url:
-gcloud api-gateway gateways describe my-api-gateway --location $REGION | grep defaultHostname
+> gcloud api-gateway gateways describe my-api-gateway \ \
+--location $REGION | grep defaultHostname
+
+>https://my-api-gateway-9z0jgy8a.wl.gateway.dev/adjustments
+
+> curl -X POST https://my-api-gateway-9z0jgy8a.wl.gateway.dev/adjustments
+
+> {"message":"UNAUTHENTICATED:Method doesn't allow unregistered callers"}
+
+## Security setup
+
+- Create API key:
+> gcloud alpha services api-keys create --display-name=api_key_test-01
+
+- Copy the "keystring" value:
+> "keyString":"AIzaSyAyKasdfasdfasdfsdf"
+
+- Test the curl call again using the API key:
+> curl -X POST https://my-api-gateway-123456.wl.gateway.dev/adjustments?key=AIzaSyAyKasdfasdfasdfsdf
+
+See section on "Securing access by using an API key":
+https://cloud.google.com/api-gateway/docs/secure-traffic-gcloud
+
 
 <br><br>
 ## Notes

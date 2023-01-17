@@ -104,8 +104,6 @@ gcloud services enable servicecontrol.googleapis.com
 ## Cloud Functions setup
 
 - Deploy function for routing API calls to workflows (enable cloudfunctions and cloudbuild if prompted):
-<br>
-`Note: "unauthenticated invocations of new function" is currently required but this should be addressed`
 > gcloud functions deploy api_gateway --trigger-http \ \
   --runtime python39 --source cloud-function/api-gateway \ \
   --entry-point api_gateway \ \

@@ -8,17 +8,19 @@ on:
       - 'cloud-function/api-gateway/**'
     
 jobs:
-  deploy_function:
-    runs-on: ubuntu-latest
+  job_id:
+    runs-on: 'ubuntu-latest'
     steps:
-    - id: 'checkout'
-      uses: 'actions/checkout@v3'
+    - uses: 'actions/checkout@v3'
     - id: 'auth'
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
+
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
+
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
+
 

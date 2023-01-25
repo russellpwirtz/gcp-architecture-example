@@ -21,7 +21,6 @@ def workflow_gateway(request) -> Response:
     workflow = method + "-" + api_path.replace('/','') + "-workflow"
 
     print(f"API request from IP: {ip_address}, {method} {api_path}, workflow: {workflow}")
-
     return execute_workflow(request, workflow)
 
 def execute_workflow(request, workflow) -> Response:

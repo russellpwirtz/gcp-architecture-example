@@ -30,7 +30,6 @@ jobs:
         source_dir: cloud-function/api-gateway 
         entry_point: workflow_gateway
         event_trigger_type: http
-        https_trigger_security_level: no-allow-unauthenticated
         
         
         

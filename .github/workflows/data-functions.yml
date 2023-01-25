@@ -28,7 +28,7 @@ jobs:
         runtime: 'python39'
         region: ${{ secrets.GCP_REGION }}
         source_dir: cloud-function/data
-        entry_point: workflow_gateway
+        entry_point: post_adjustment
     - name: 'deploy Get Account function'
       uses: 'google-github-actions/deploy-cloud-functions@v1'
       with:
@@ -36,6 +36,6 @@ jobs:
         runtime: 'python39'
         region: ${{ secrets.GCP_REGION }}
         source_dir: cloud-function/data
-        entry_point: workflow_gateway
+        entry_point: get_adjustment
         
         

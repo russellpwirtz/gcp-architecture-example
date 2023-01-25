@@ -10,7 +10,6 @@ import os
 # requires .env file
 GCP_PROJECT: str = os.getenv("GCP_PROJECT")
 GCP_REGION: str = os.getenv("GCP_REGION")
-
 IP_ADDRESS_HEADER: str = 'X-Forwarded-For'
 ORIGINAL_PATH_HEADER: str = 'X-Envoy-Original-Path'
 

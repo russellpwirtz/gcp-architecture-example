@@ -29,7 +29,6 @@ def get_account(request) -> Response:
             return 'Precondition Failed', 412
 
         client = firestore.Client()
-        
         doc_ref = client.collection(u'account').document(u'{}'.format(account_id))
         doc = doc_ref.get()
 

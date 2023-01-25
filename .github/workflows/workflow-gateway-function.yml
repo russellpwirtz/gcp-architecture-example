@@ -6,16 +6,21 @@ on:
       - main
     paths:
       - 'cloud-function/api-gateway/**'
-      
+    
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  job_id:
+    runs-on: 'ubuntu-latest'
     steps:
-    - uses: actions/checkout@v2
-    - name: Deploy Cloud Function
-      uses: GoogleCloudPlatform/github-actions/gcloud-cli@main
+    - uses: 'actions/checkout@v3'
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
       with:
-        args: functions deploy workflow_gateway --region=${{ secrets.GCP_REGION }} --source cloud-function/api-gateway --entry-point workflow_gateway --trigger-http --runtime python39 --no-allow-unauthenticated
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
-        GOOGLE_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+
+

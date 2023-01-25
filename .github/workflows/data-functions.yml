@@ -1,0 +1,41 @@
+name: Deploy Data Functions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cloud-function/data/**'
+    
+jobs:
+  job_id:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - name: 'Checkout code'
+      uses: 'actions/checkout@v3'
+    - name: 'Setup auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'Verify gcloud CLI'
+      run: 'gcloud info'
+    - name: 'deploy Post Adjustment function'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'post_adjustment'
+        runtime: 'python39'
+        region: ${{ secrets.GCP_REGION }}
+        source_dir: cloud-function/data
+        entry_point: workflow_gateway
+    - name: 'deploy Get Account function'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'get_adjustment'
+        runtime: 'python39'
+        region: ${{ secrets.GCP_REGION }}
+        source_dir: cloud-function/data
+        entry_point: workflow_gateway
+        
+        

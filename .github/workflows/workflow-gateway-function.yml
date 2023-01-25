@@ -27,9 +27,10 @@ jobs:
         name: 'workflow_gateway'
         runtime: 'python39'
         region: ${{ secrets.GCP_REGION }}
-        source: cloud-function/api-gateway 
-        entry-point: workflow_gateway
-        trigger: http
+        source_dir: cloud-function/api-gateway 
+        entry_point: workflow_gateway
+        event_trigger_type: http
+        https_trigger_security_level: no-allow-unauthenticated
         
         
         

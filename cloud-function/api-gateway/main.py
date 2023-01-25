@@ -31,7 +31,6 @@ def execute_workflow(request, workflow) -> Response:
     workflows_client = workflows_v1beta.WorkflowsClient()
 
     parent = workflows_client.workflow_path(GCP_PROJECT, GCP_REGION, workflow)
-
     workflow_params = request.get_json()
     workflow_params['gcp_project'] = GCP_PROJECT
     workflow_params['gcp_region'] = GCP_REGION

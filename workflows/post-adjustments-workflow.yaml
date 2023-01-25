@@ -7,10 +7,6 @@ main:
           - project:  ${input.gcp_project}
           - region: ${input.gcp_region}
           # - topic: "events"
-    - print_input:
-        call: sys.log
-        args:
-         - text: '${"account_id: " + input.account_id}'
     - post_adjustments_function:
         call: http.post
         args:
@@ -18,12 +14,12 @@ main:
           auth:
             type: OIDC
           body:
-            account_id: ${input.account_id}
-            timestamp: ${input.timestamp}
-            amount: ${input.amount}
-            asset: ${input.asset}
-            description: ${input.description}
+            input: ${input}
         result: adjustments_response
+    - print_result:
+        call: sys.log
+        args:
+          - text: '${text.encode(adjustments_response.body)}'
     # - publish:
     #     call: googleapis.pubsub.v1.projects.topics.publish
     #     args:

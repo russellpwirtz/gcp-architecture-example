@@ -61,7 +61,10 @@ def add_update_account(request):
 
 def post_adjustment(request) -> Response:
     try:
-        json_ = request.get_json()
+        json_ = request.get_json()['input']
+        gcp_project = json_.pop("gcp_project", None)
+        gcp_region = json_.pop("gcp_region", None)
+
         if 'account_id' not in json_:
             return 'Precondition Failed', 412
         # TODO validate account id
@@ -75,9 +78,8 @@ def post_adjustment(request) -> Response:
         client = firestore.Client()
         doc_ref = client.collection(u'adjustments').document(u'{}'.format(adjustment.id))
         doc_ref.set(adjustment.__dict__)
-        print(f'Created adjustment: {str(adjustment)}')
+        print(f'Posted adjustment: {str(adjustment)}')
         return {"created": True}, 201
     except Exception as e:
         print(str(e))
         return {"created": False}, 500
-

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'cloud-functions/api-gateway/**'
+      - 'cloud-function/api-gateway/**'
       
 jobs:
   deploy:

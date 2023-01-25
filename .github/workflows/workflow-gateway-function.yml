@@ -29,7 +29,6 @@ jobs:
         region: ${{ secrets.GCP_REGION }}
         source_dir: cloud-function/api-gateway 
         entry_point: workflow_gateway
-        event_trigger_type: http
         
         
         

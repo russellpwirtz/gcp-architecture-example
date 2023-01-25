@@ -42,7 +42,6 @@ def execute_workflow(request, workflow) -> Response:
     execution_id = response.name.split("/executions/")[1]
     
     print(f"Created execution id: {execution_id}; {response.name}")
-
     return {"job_id": execution_id}, 200
 
 

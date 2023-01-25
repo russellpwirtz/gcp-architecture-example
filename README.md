@@ -107,16 +107,18 @@ gcloud services enable servicecontrol.googleapis.com
 
 - Deploy workflow gateway function (enable cloudfunctions and cloudbuild if prompted):
 > gcloud functions deploy workflow_gateway --trigger-http \ \
---runtime python39 --source cloud-function/api-gateway \ \
---entry-point workflow_gateway \ \
---region $REGION
+    --runtime python39 --source cloud-function/api-gateway \ \
+    --entry-point workflow_gateway \ \
+    --region $REGION \ \
+    --no-allow-unauthenticated
 
 
 - Deploy data functions:
 > gcloud functions deploy post_adjustment --trigger-http \ \
-  --runtime python39 --source cloud-function/data \ \
-  --entry-point post_adjustment \ \
-  --region $REGION
+    --runtime python39 --source cloud-function/data \ \
+    --entry-point post_adjustment \ \
+    --region $REGION \ \
+    --no-allow-unauthenticated
 
 ## Workflows setup
 

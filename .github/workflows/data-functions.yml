@@ -32,10 +32,10 @@ jobs:
     - name: 'deploy Get Account function'
       uses: 'google-github-actions/deploy-cloud-functions@v1'
       with:
-        name: 'get_adjustment'
+        name: 'get_account'
         runtime: 'python39'
         region: ${{ secrets.GCP_REGION }}
         source_dir: cloud-function/data
-        entry_point: get_adjustment
+        entry_point: get_account
         
         

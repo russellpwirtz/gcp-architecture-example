@@ -8,7 +8,8 @@ on:
       - 'cloud-function/api-gateway/**'
     
 jobs:
-  job_id:
+  deploy_function:
+    timeout-minutes: 30
     runs-on: 'ubuntu-latest'
     steps:
     - name: 'Checkout code'
@@ -19,14 +20,12 @@ jobs:
         credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
-    - name: 'Verify gcloud CLI'
-      run: 'gcloud info'
     - name: 'deploy function'
       uses: 'google-github-actions/deploy-cloud-functions@v1'
       with:
         name: 'workflow_gateway'
         runtime: 'python39'
-        region: ${{ secrets.GCP_REGION }}
+        region: '${{ secrets.GCP_REGION }}'
         source_dir: cloud-function/api-gateway 
         entry_point: workflow_gateway
         

@@ -28,7 +28,20 @@ jobs:
         region: '${{ vars.GCP_REGION }}'
         source_dir: cloud-function/api-gateway 
         entry_point: workflow_gateway
-        
-        
-        
+    - name: Approve Deployment
+      id: approve_deployment
+      uses: actions/approve@v2
+      with:
+        name: Continue
+        message: "Are you sure you want to continue?"
+    - name: 'deploy function'
+      if: steps.approve_deployment.outputs.approved == 'true'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'workflow_gateway'
+        runtime: 'python39'
+        region: '${{ vars.GCP_REGION }}'
+        source_dir: cloud-function/api-gateway 
+        entry_point: workflow_gateway
+          
 

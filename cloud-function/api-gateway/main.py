@@ -18,7 +18,6 @@ def workflow_gateway(request) -> Response:
     method = request.method.lower()
     api_path = request.headers.get(ORIGINAL_PATH_HEADER).split("?")[0] if "?" in request.headers.get(ORIGINAL_PATH_HEADER) else request.headers.get(ORIGINAL_PATH_HEADER)
     workflow = method + "-" + api_path.replace('/','') + "-workflow"
-
     print(f"API request from IP: {ip_address}, {method} {api_path}, workflow: {workflow}")
     return execute_workflow(request, workflow)
 

@@ -25,7 +25,7 @@ jobs:
       with:
         name: 'workflow_gateway'
         runtime: 'python39'
-        region: '${{ secrets.GCP_REGION }}'
+        region: '${{ vars.GCP_REGION }}'
         source_dir: cloud-function/api-gateway 
         entry_point: workflow_gateway
         

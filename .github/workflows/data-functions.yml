@@ -25,7 +25,7 @@ jobs:
       with:
         name: 'post_adjustment'
         runtime: 'python39'
-        region: '${{ secrets.GCP_REGION }}'
+        region: '${{ vars.GCP_REGION }}'
         source_dir: cloud-function/data
         entry_point: post_adjustment
     - name: 'deploy Get Account function'
@@ -33,7 +33,7 @@ jobs:
       with:
         name: 'get_account'
         runtime: 'python39'
-        region: '${{ secrets.GCP_REGION }}'
+        region: '${{ vars.GCP_REGION }}'
         source_dir: cloud-function/data
         entry_point: get_account
         

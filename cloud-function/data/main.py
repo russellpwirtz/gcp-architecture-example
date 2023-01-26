@@ -35,7 +35,6 @@ def get_account(request) -> Response:
         if doc.to_dict():
             response = jsonify(doc.to_dict())
             response.status_code = 200
-
             return response
         else:
             response = jsonify({
@@ -43,7 +42,7 @@ def get_account(request) -> Response:
                 'errorMessage': 'Account does not exist'
             })
             response.status_code = 404
-            
+
             return response
     except Exception as e:
         return e

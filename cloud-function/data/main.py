@@ -61,6 +61,7 @@ def add_update_account(request):
 def post_adjustment(request) -> Response:
     try:
         json_ = request.get_json()['input']
+        
         gcp_project = json_.pop("gcp_project", None)
         gcp_region = json_.pop("gcp_region", None)
 

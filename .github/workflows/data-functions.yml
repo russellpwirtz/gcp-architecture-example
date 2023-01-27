@@ -3,6 +3,7 @@ name: Deploy Data Functions
 on:
   push:
     branches:
+      - staging
       - main
     paths:
       - 'cloud-function/data/**'

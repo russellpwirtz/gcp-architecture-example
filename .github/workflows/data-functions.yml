@@ -8,9 +8,40 @@ on:
       - 'cloud-function/data/**'
     
 jobs:
-  deploy_function:
-    timeout-minutes: 30
+  deploy_staging:
     runs-on: 'ubuntu-latest'
+    environment: staging
+    timeout-minutes: 30
+    steps:
+    - name: 'Checkout code'
+      uses: 'actions/checkout@v3'
+    - name: 'Setup auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'deploy Post Adjustment function'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'post_adjustment'
+        runtime: 'python39'
+        region: '${{ vars.GCP_REGION }}'
+        source_dir: cloud-function/data
+        entry_point: post_adjustment
+    - name: 'deploy Get Account function'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'get_account'
+        runtime: 'python39'
+        region: '${{ vars.GCP_REGION }}'
+        source_dir: cloud-function/data
+        entry_point: get_account
+  deploy_production:
+    runs-on: 'ubuntu-latest'
+    environment: production
+    timeout-minutes: 30
+    needs: [deploy_staging]
     steps:
     - name: 'Checkout code'
       uses: 'actions/checkout@v3'

@@ -39,7 +39,7 @@ jobs:
         source_dir: cloud-function/data
         entry_point: get_account
   deploy_production:
-      needs: common_setup
+      needs: deploy_staging
       runs-on: 'ubuntu-latest'
       environment: production
       timeout-minutes: 30

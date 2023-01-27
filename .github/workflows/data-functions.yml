@@ -22,9 +22,12 @@ jobs:
         credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
-
   deploy_staging:
-    - needs: common_setup
+    needs: common_setup
+    runs-on: 'ubuntu-latest'
+    environment: staging
+    timeout-minutes: 30
+    steps:
     - name: 'deploy Post Adjustment function'
       uses: 'google-github-actions/deploy-cloud-functions@v1'
       with:
@@ -42,22 +45,26 @@ jobs:
         source_dir: cloud-function/data
         entry_point: get_account
   deploy_production:
-    - needs: common_setup
-    - name: 'deploy Post Adjustment function'
-      uses: 'google-github-actions/deploy-cloud-functions@v1'
-      with:
-        name: 'post_adjustment'
-        runtime: 'python39'
-        region: '${{ vars.GCP_REGION }}'
-        source_dir: cloud-function/data
-        entry_point: post_adjustment
-    - name: 'deploy Get Account function'
-      uses: 'google-github-actions/deploy-cloud-functions@v1'
-      with:
-        name: 'get_account'
-        runtime: 'python39'
-        region: '${{ vars.GCP_REGION }}'
-        source_dir: cloud-function/data
-        entry_point: get_account
+      needs: common_setup
+      runs-on: 'ubuntu-latest'
+      environment: production
+      timeout-minutes: 30
+      steps:
+      - name: 'deploy Post Adjustment function'
+        uses: 'google-github-actions/deploy-cloud-functions@v1'
+        with:
+          name: 'post_adjustment'
+          runtime: 'python39'
+          region: '${{ vars.GCP_REGION }}'
+          source_dir: cloud-function/data
+          entry_point: post_adjustment
+      - name: 'deploy Get Account function'
+        uses: 'google-github-actions/deploy-cloud-functions@v1'
+        with:
+          name: 'get_account'
+          runtime: 'python39'
+          region: '${{ vars.GCP_REGION }}'
+          source_dir: cloud-function/data
+          entry_point: get_account
         
         

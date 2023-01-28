@@ -1,0 +1,17 @@
+steps:
+  - name: 'Checkout code'
+    uses: 'actions/checkout@v3'
+  - name: 'Setup auth'
+    uses: 'google-github-actions/auth@v1'
+    with:
+      credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
+  - name: 'Set up Cloud SDK'
+    uses: 'google-github-actions/setup-gcloud@v1'
+  - name: 'Deploy Cloud Function'
+    uses: 'google-github-actions/deploy-cloud-functions@v1'
+    with:
+      name: '${{ inputs.cloud_function }}'
+      runtime: '${{ inputs.runtime }}'
+      region: '${{ inputs.region }}'
+      source_dir: '${{ inputs.source_dir }}'
+      entry_point: '${{ inputs.entry_point }}'

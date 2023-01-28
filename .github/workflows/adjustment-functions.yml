@@ -1,0 +1,40 @@
+name: Deploy Data Functions
+
+on:
+  push:
+    branches:
+      - staging
+      - main
+    paths:
+      - 'cloud-function/data/**'
+    
+jobs:
+  deploy_staging:
+    runs-on: 'ubuntu-latest'
+    environment: staging
+    timeout-minutes: 30
+    steps:
+    - name: 'Deploy Staging'
+      uses: './deploy-function.yml'
+      with:
+        cloud_function: 'post_adjustment'
+        runtime: 'python39'
+        region: '${{ vars.GCP_REGION }}'
+        source_dir: 'cloud-function/data'
+        entry_point: 'post_adjustment'
+  deploy_production:
+      needs: deploy_staging
+      runs-on: 'ubuntu-latest'
+      environment: production
+      timeout-minutes: 30
+      if: github.ref == 'refs/heads/main'
+      steps:
+      - name: 'Deploy Production'
+        uses: './deploy-function.yml'
+        with:
+          cloud_function: 'post_adjustment'
+          runtime: 'python39'
+          region: '${{ vars.GCP_REGION }}'
+          source_dir: 'cloud-function/data'
+          entry_point: 'post_adjustment'
+        

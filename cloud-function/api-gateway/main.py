@@ -14,7 +14,6 @@ IP_ADDRESS_HEADER: str = 'X-Forwarded-For'
 ORIGINAL_PATH_HEADER: str = 'X-Envoy-Original-Path'
 
 def workflow_gateway(request) -> Response:
-    
     ip_address = request.headers.get(IP_ADDRESS_HEADER)
     method = request.method.lower()
     api_path = request.headers.get(ORIGINAL_PATH_HEADER).split("?")[0] if "?" in request.headers.get(ORIGINAL_PATH_HEADER) else request.headers.get(ORIGINAL_PATH_HEADER)

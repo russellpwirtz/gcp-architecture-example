@@ -61,7 +61,6 @@ def post_adjustment(request) -> Response:
         if 'account_id' not in json_:
             return 'Precondition Failed', 412
         # TODO validate account id
-
         if 'id' not in json_:
             json_['id'] = str(uuid.uuid4())
         # TODO validate unique id

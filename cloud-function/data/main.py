@@ -13,13 +13,7 @@ class Adjustment:
 
     @classmethod
     def from_json(cls, json: dict):
-        return cls(
-            id=json['id'], 
-            account_id=json['account_id'], 
-            timestamp=json['timestamp'], 
-            amount=json['amount'],
-            asset=json['asset'],
-            description=json['description'])
+        return cls(**json)
 
 def get_account(request) -> Response:
     try:
@@ -67,7 +61,6 @@ def post_adjustment(request) -> Response:
         if 'account_id' not in json_:
             return 'Precondition Failed', 412
         # TODO validate account id
-
         if 'id' not in json_:
             json_['id'] = str(uuid.uuid4())
         # TODO validate unique id

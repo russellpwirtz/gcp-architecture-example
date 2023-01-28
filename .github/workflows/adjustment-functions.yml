@@ -19,7 +19,8 @@ jobs:
     - name: Create .env file
       run: |
         echo "GCP_REGION=${{ vars.GCP_REGION }}" > cloud-function/api-gateway/.env
-        echo "GCP_PROJECT=${{ vars.GCP_PROJECT_ID }}" > cloud-function/api-gateway/.env
+        echo "GCP_PROJECT=${{ vars.GCP_PROJECT_ID }}" >> cloud-function/api-gateway/.env
+        cat cloud-function/api-gateway/.env
     - name: 'Setup auth'
       uses: 'google-github-actions/auth@v1'
       with:
@@ -55,6 +56,7 @@ jobs:
         run: |
           echo "GCP_REGION=${{ vars.GCP_REGION }}" > cloud-function/api-gateway/.env
           echo "GCP_PROJECT=${{ vars.GCP_PROJECT_ID }}" >> cloud-function/api-gateway/.env
+          cat cloud-function/api-gateway/.env
       - name: 'Setup auth'
         uses: 'google-github-actions/auth@v1'
         with:

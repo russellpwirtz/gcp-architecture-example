@@ -42,7 +42,6 @@ def get_account(request) -> Response:
                 'errorMessage': 'Account does not exist'
             })
             response.status_code = 404
-
             return response
     except Exception as e:
         return e
@@ -52,7 +51,6 @@ def add_update_account(request):
         json_ = request.get_json()
         if 'id' not in json_:
             return 'Precondition Failed', 412
-
         client = firestore.Client()
         doc_ref = client.collection(u'account').document(u'{}'.format(json_.get('id')))
         doc_ref.set(json_)

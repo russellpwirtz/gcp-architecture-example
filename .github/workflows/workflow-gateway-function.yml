@@ -34,7 +34,7 @@ jobs:
         name: 'workflow_gateway'
         runtime: 'python39'
         region: '${{ vars.GCP_REGION }}'
-        source_dir: cloud-function/data
+        source_dir: cloud-function/api-gateway
         entry_point: workflow_gateway
   deploy_production:
     needs: deploy_staging
@@ -62,7 +62,7 @@ jobs:
         name: 'workflow_gateway'
         runtime: 'python39'
         region: '${{ vars.GCP_REGION }}'
-        source_dir: cloud-function/data
+        source_dir: cloud-function/api-gateway
         entry_point: workflow_gateway
       
         

@@ -27,7 +27,6 @@ def execute_workflow(request, workflow) -> Response:
 
     execution_client = executions_v1beta.ExecutionsClient()
     workflows_client = workflows_v1beta.WorkflowsClient()
-
     parent = workflows_client.workflow_path(GCP_PROJECT, GCP_REGION, workflow)
 
     workflow_params = request.get_json()

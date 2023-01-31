@@ -1,6 +1,7 @@
 from google.cloud import firestore
 import uuid
 from flask import jsonify, Response
+import json
 
 class Adjustment:
     def __init__(self, id: str, account_id: str, timestamp: str, amount: str, asset: str, description: str):
@@ -71,8 +72,8 @@ def post_adjustment(request) -> Response:
         client = firestore.Client()
         doc_ref = client.collection(u'adjustments').document(u'{}'.format(adjustment.id))
         doc_ref.set(adjustment.__dict__)
-        print(f'Posted adjustment: {str(adjustment)}')
-        return {"created": True}, 201
+        print(f'Posted adjustment: {str(adjustment.__dict__)}')
+        return json.dumps(adjustment.__dict__), 201
     except Exception as e:
         print(str(e))
         return {"created": False}, 500

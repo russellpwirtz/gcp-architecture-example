@@ -19,7 +19,7 @@ main:
     - print_result:
         call: sys.log
         args:
-          - text: '${adjustments_response.body}'\
+          - text: '${adjustments_response.body}'
     # - publish:
     #     call: googleapis.pubsub.v1.projects.topics.publish
     #     args:

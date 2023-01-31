@@ -26,7 +26,7 @@ main:
           topic: ${"projects/" + project + "/topics/" + topic}
           body:
             messages:
-              - data: ${adjustments_response.body}
+              - data: ${base64.encode(json.encode(adjustments_response.body))}
         result: publish_result
     - return_value:
         return: ${adjustments_response.body}

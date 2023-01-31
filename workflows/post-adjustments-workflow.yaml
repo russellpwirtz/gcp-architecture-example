@@ -20,15 +20,14 @@ main:
         call: sys.log
         args:
           - text: '${adjustments_response.body}'
-    # - publish:
-    #     call: googleapis.pubsub.v1.projects.topics.publish
-    #     args:
-    #       topic: ${"projects/" + project + "/topics/" + topic}
-    #       body:
-    #         messages:
-    #           - data: ${base64.encode(adjustments_response.body)}
-    #           # - data: ${base64.encode(text.encode(adjustments_response.body))}
-    #     result: publish_result
+    - publish:
+        call: googleapis.pubsub.v1.projects.topics.publish
+        args:
+          topic: ${"projects/" + project + "/topics/" + topic}
+          body:
+            messages:
+              - data: ${base64.encode(adjustments_response.body)}
+        result: publish_result
     - return_value:
         return: ${adjustments_response.body}
 # [END post-adjustment-workflow]

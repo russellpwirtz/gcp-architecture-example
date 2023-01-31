@@ -3,7 +3,7 @@ name: Deploy Data Functions
 on:
   push:
     branches:
-      - staging
+      - development
       - main
     paths:
       - 'cloud-function/data/**'
@@ -13,14 +13,10 @@ jobs:
     runs-on: 'ubuntu-latest'
     environment: staging
     timeout-minutes: 30
+    if: github.ref == 'refs/heads/development'
     steps:
     - name: 'Checkout code'
       uses: 'actions/checkout@v3'
-    - name: Create .env file
-      run: |
-        echo "GCP_REGION=${{ vars.GCP_REGION }}" > cloud-function/api-gateway/.env
-        echo "GCP_PROJECT=${{ vars.GCP_PROJECT_ID }}" >> cloud-function/api-gateway/.env
-        cat cloud-function/api-gateway/.env
     - name: 'Setup auth'
       uses: 'google-github-actions/auth@v1'
       with:
@@ -44,40 +40,35 @@ jobs:
         source_dir: cloud-function/data
         entry_point: get_account
   deploy_production:
-      needs: deploy_staging
-      runs-on: 'ubuntu-latest'
-      environment: production
-      timeout-minutes: 30
-      if: github.ref == 'refs/heads/main'
-      steps:
-      - name: 'Checkout code'
-        uses: 'actions/checkout@v3'
-      - name: Create .env file
-        run: |
-          echo "GCP_REGION=${{ vars.GCP_REGION }}" > cloud-function/api-gateway/.env
-          echo "GCP_PROJECT=${{ vars.GCP_PROJECT_ID }}" >> cloud-function/api-gateway/.env
-          cat cloud-function/api-gateway/.env
-      - name: 'Setup auth'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
-      - name: 'deploy Post Adjustment function'
-        uses: 'google-github-actions/deploy-cloud-functions@v1'
-        with:
-          name: 'post_adjustment'
-          runtime: 'python39'
-          region: '${{ vars.GCP_REGION }}'
-          source_dir: cloud-function/data
-          entry_point: post_adjustment
-      - name: 'deploy Get Account function'
-        uses: 'google-github-actions/deploy-cloud-functions@v1'
-        with:
-          name: 'get_account'
-          runtime: 'python39'
-          region: '${{ vars.GCP_REGION }}'
-          source_dir: cloud-function/data
-          entry_point: get_account
-        
-        
+    needs: deploy_staging
+    runs-on: 'ubuntu-latest'
+    environment: production
+    timeout-minutes: 30
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: 'Checkout code'
+      uses: 'actions/checkout@v3'
+    - name: 'Setup auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'deploy Post Adjustment function'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'post_adjustment'
+        runtime: 'python39'
+        region: '${{ vars.GCP_REGION }}'
+        source_dir: cloud-function/data
+        entry_point: post_adjustment
+    - name: 'deploy Get Account function'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'get_account'
+        runtime: 'python39'
+        region: '${{ vars.GCP_REGION }}'
+        source_dir: cloud-function/data
+        entry_point: get_account
+      
+      

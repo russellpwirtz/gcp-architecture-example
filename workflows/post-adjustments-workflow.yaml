@@ -20,7 +20,6 @@ main:
         call: sys.log
         args:
           - text: '${text.encode(adjustments_response.body)}'\
-          
     # - publish:
     #     call: googleapis.pubsub.v1.projects.topics.publish
     #     args:

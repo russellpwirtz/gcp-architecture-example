@@ -22,7 +22,7 @@ jobs:
     - name: Use gcloud CLI
       run: |
         gcloud workflows deploy post-adjustments-workflow \
-        --location {{ vars.GCP_REGION }} \
+        --location ${{ vars.GCP_REGION }} \
         --source post-adjustments-workflow.yaml \
         --project ${{ vars.GCP_PROJECT_ID }} \
         --labels "commit-sha=${{ github.sha }}" 

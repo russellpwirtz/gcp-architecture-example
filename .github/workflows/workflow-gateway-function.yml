@@ -3,7 +3,7 @@ name: Deploy Workflow Gateway Functions
 on:
   push:
     branches:
-      - staging
+      - development
       - main
     paths:
       - 'cloud-function/api-gateway/**'
@@ -13,7 +13,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     environment: staging
     timeout-minutes: 30
-    if: github.ref == 'refs/heads/staging'
+    if: github.ref == 'refs/heads/development'
     steps:
     - name: 'Checkout code'
       uses: 'actions/checkout@v3'

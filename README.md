@@ -33,20 +33,18 @@ The main components of the architecture are:
 - Download Google Cloud CLI
 https://cloud.google.com/sdk/docs/install-sdk
 
-
-- In shell, set local environment variables (fill in your specific details)
-> export PROJECT_ID=myproject-12345\
-> export REGION=us-west2
-
-- Log into Google Cloud (uses SSO flow via brower)
+- Log into Google Cloud (uses SSO flow via browser)
 > gcloud auth login
 
+- In shell, set local environment variables (fill in your specific details)
+> export PROJECT_ID=myproject-12345 \
+> export REGION=us-west2
+
+- Set the project in gcloud:
+> gcloud config set project $PROJECT_ID
 
 - Initialize project
 > gcloud init
-
-- Verify the project is set to default:
-> gcloud config set project $PROJECT_ID
 
 - Run bash commands at project root to update config (make sure PROJECT_ID and REGION vars have been exported):
 > grep -rl --exclude=README.md MY_GCP_PROJECT . | xargs sed -i '' -e 's/MY_GCP_PROJECT/'"$PROJECT_ID"'/g'
